@@ -2,7 +2,7 @@ require("dotenv").config();
 
 const express = require("express");
 const cors = require("cors");
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 5001;
 
 const app = express();
 
@@ -14,7 +14,7 @@ app.use(cors());
 // campgain
 
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
-const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.xfvkq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
+const uri = `mongodb+srv://campgain:zB31awhyLFjBjNGC@cluster0.xfvkq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 //  console.log(process.env.DB_USER ,'user vaiiiii');
 //  console.log("DB_PASSWORD:", process.env.DB_PASSWORD);
 console.log(uri);
@@ -33,7 +33,7 @@ async function run() {
     // await client.connect();
 
     const campgainCollection = client.db("campgainDb").collection("campgain");
-    const userCollection = client.db("campgainDb").collection("ysers");
+    const projectCollection = client.db("campgainDb").collection("project");
 
     // post operation  ................
 
@@ -42,6 +42,26 @@ async function run() {
     //     const result = await campgainCollection.insertOne(newCampgain);
     //     res.send(result)
     // })
+
+    app.post('/project', async(req,res)=>{
+        const projectNew = req.body;
+        const result = await projectCollection.insertOne(projectNew);
+        res.send(result)
+    })
+
+    app.get('/project', async(req,res)=>{
+       const projectGet = projectCollection.find();
+       const result = await projectGet.toArray();
+       res.send(result);
+    })
+
+    app.delete('/project/:id' , async(req, res)=> {
+      const id = req.params.id;
+      const query = {_id : new ObjectId(id)};
+      const result = await projectCollection.deleteOne(query);
+      res.send(result);
+    })
+
     // app.post('/users',async (req,res)=>{
     //     const newCampgain = req.body;
     //     const result = await userCollection.insertOne(newCampgain);
@@ -91,7 +111,7 @@ async function run() {
     // Send a ping to confirm a successful connection
     // await client.db("admin").command({ ping: 1 });
     console.log(
-      "Pinged your deployment. You successfully connected to MongoDB!"
+      "Pinged your deployment. You successfully connected to MongoDB to the Protfolio server!"
     );
   } finally {
     // Ensures that the client will close when you finish/error
@@ -102,7 +122,7 @@ run().catch(console.dir);
 
 app.get("/", (req, res) => {
   console.log("hello server ");
-  res.send("the server is running");
+  res.send("the portfolio server is running");
 });
 
 app.listen(port, (req, res) => {
