@@ -34,6 +34,8 @@ async function run() {
 
     const campgainCollection = client.db("campgainDb").collection("campgain");
     const projectCollection = client.db("campgainDb").collection("project");
+    const userCollection = client.db("campgainDb").collection("user");
+    const reviewsCollection = client.db("campgainDb").collection('reviews');
 
     // post operation  ................
 
@@ -50,17 +52,54 @@ async function run() {
     })
 
     app.get('/project', async(req,res)=>{
-       const projectGet = projectCollection.find();
-       const result = await projectGet.toArray();
+      const projectGet = projectCollection.find();
+      const result = await projectGet.toArray();
+      res.send(result);
+   })
+
+   app.delete('/project/:id' , async(req, res)=> {
+    const id = req.params.id;
+    const query = {_id : new ObjectId(id)};
+    const result = await projectCollection.deleteOne(query);
+    res.send(result);
+  })
+
+  //  User Section
+
+    app.post('/user', async(req,res)=>{
+        const userNew = req.body;
+        const result = await userCollection.insertOne(userNew);
+        res.send(result)
+    })
+
+    app.get('/user', async(req,res)=>{
+       const userGet = userCollection.find();
+       const result = await userGet.toArray();
        res.send(result);
     })
 
-    app.delete('/project/:id' , async(req, res)=> {
-      const id = req.params.id;
-      const query = {_id : new ObjectId(id)};
-      const result = await projectCollection.deleteOne(query);
-      res.send(result);
+    // reviews Section
+
+    app.post('/reviews', async(req, res)=>{
+      const reviews = req.body;
+      const result = await reviewsCollection.insertOne(reviews);
+      res.send(result)
+    });
+
+    app.get('/reviews' , async(req, res)=>{
+      const review = reviewsCollection.find();
+      const result = await review.toArray();
+      res.send(result)
     })
+
+
+
+
+
+    // Reviews
+
+
+
 
     // app.post('/users',async (req,res)=>{
     //     const newCampgain = req.body;
