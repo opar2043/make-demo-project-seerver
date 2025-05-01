@@ -91,43 +91,19 @@ async function run() {
       const result = await review.toArray();
       res.send(result)
     })
+    app.delete('/reviews/:id' , async(req , res)=>{
+      const id = req.params.id;
+      const query = {_id : new ObjectId(id)};
+      const result = await reviewsCollection.deleteOne(query);
+      res.send(result)
+
+    })
 
 
 
 
 
     // Reviews
-
-
-
-
-    // app.post('/users',async (req,res)=>{
-    //     const newCampgain = req.body;
-    //     const result = await userCollection.insertOne(newCampgain);
-    //     res.send(result)
-    // })
-
-    //  get operation =====================
-
-    // app.get('/campgain',async(req,res)=>{
-    //     const cursor = campgainCollection.find();
-    //     const result = await cursor.toArray();
-    //     res.send(result);
-    // })
-
-    // app.get('/users',async(req,res)=>{
-    //     const cursor = userCollection.find();
-    //     const result = await cursor.toArray();
-    //     res.send(result);
-    // })
-
-    // delete operation =====================
-    // app.delete('/campgain/:id', async(req,res)=>{
-    //     const id = req.params.id;
-    //     const query = {_id: new ObjectId(id)};
-    //     const result = await campgainCollection.deleteOne(query);
-    //     res.send(result);
-    // })
 
     // app.patch('/campgain/:id',async(req,res)=>{
     //   const id = req.params.id;
